@@ -1,0 +1,10 @@
+public static void main(String[] args) throws FileNotFoundException, IOException {
+        Properties applicationProps = new Properties();
+        FileOutputStream out = new FileOutputStream("appProperties");
+        String value = System.getenv("TestEnviron");
+        if (value != null) {
+            applicationProps.setProperty("TestEnviron", value);
+            applicationProps.store(out, "---TestEnviron---");
+        }
+        System.out.println("TestEnviron = " + value);
+    }
