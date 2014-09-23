@@ -20,8 +20,9 @@ public class OS_output {
      */
     public static void main(String[] args) {
 
+        //schrijft de output van het command ls naar het output scherms
         try {
-            ProcessBuilder pb = new ProcessBuilder("ls");
+            ProcessBuilder pb = new ProcessBuilder("lss");
             Process proc;
             proc = pb.start();
             InputStream is = proc.getInputStream();
