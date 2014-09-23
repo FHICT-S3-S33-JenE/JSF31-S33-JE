@@ -20,7 +20,6 @@ public class OS_runtime {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //creeert 100.000 strings met hello.
         long start = printRuntime();
 
         System.out.println("Using string...");
@@ -31,11 +30,9 @@ public class OS_runtime {
         }
         long string = printRuntime();
 
-        // garbage collection
         System.gc();
         System.out.println("Using stringbuilder...");
 
-        //100.000 string worden dmv de stringbuilder 
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < 100000; i++) {
             b = b.append("Hello").append(i);
@@ -50,8 +47,6 @@ public class OS_runtime {
     }
 
     private static long printRuntime() {
-        //schrijft informatie naar het output scherm, deze informatie is onderandere: aantal processors, memory etc.
-        // deze methode return deze informatie.
         Runtime currentRun = Runtime.getRuntime();
         System.out.println("Available processors = " + currentRun.availableProcessors());
         long totalmemory = currentRun.totalMemory();
