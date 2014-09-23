@@ -18,12 +18,20 @@ public class OS_output {
     /**
      * @param args the command line arguments
      */
+<<<<<<< HEAD
     public static void main(String[] args)
     {
         // schrijft de output van het commando ls naar de output.
         try
         {
             ProcessBuilder pb = new ProcessBuilder("ls");
+=======
+    public static void main(String[] args) {
+
+        //schrijft de output van het command ls naar het output scherms
+        try {
+            ProcessBuilder pb = new ProcessBuilder("lss");
+>>>>>>> FETCH_HEAD
             Process proc;
             proc = pb.start();
             InputStream is = proc.getInputStream();
