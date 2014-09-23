@@ -18,27 +18,21 @@ public class OS_output {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args)
-    {
-        // schrijft de output van het commando ls naar de output.
-        try
-        {
+    public static void main(String[] args) {
+
+        try {
             ProcessBuilder pb = new ProcessBuilder("ls");
             Process proc;
             proc = pb.start();
             InputStream is = proc.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
-            try (BufferedReader br = new BufferedReader(isr))
-            {
+            try (BufferedReader br = new BufferedReader(isr)) {
                 String line;
-                while ((line = br.readLine()) != null)
-                {
+                while ((line = br.readLine()) != null) {
                     System.out.println(line);
                 }
             }
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             System.out.println("Error");
         }
 
