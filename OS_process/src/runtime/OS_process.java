@@ -5,7 +5,12 @@
  */
 package runtime;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,26 +22,24 @@ public class OS_process {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ProcessBuilder pb = new ProcessBuilder("gnome-calculator");
-        try {
-            Process p = pb.start();
-            Thread.sleep(5000);
-            p.destroy();
-        } catch (IOException ex) {
-            System.out.println("Error when opening 'gnome-calculator'");
-        } catch (InterruptedException ex) {
-            System.out.println("Error when making thread sleep");
+        TimeStamp ts = new TimeStamp();
+        ts.setBegin("Begin van de meting");
+        if (args.length % 2 == 1) {
+            System.out.print("oneven aantal args");
+        } else {
+            for (int i = 0; i < args.length; i = i + 2) {
+                String[] arg = {args[i], args[i+1]};
+                Thread t = new Thread(new ProcessNew(arg));
+                t.start();
+            }
         }
 
+        ts.setEnd("eind");
+        System.out.print(ts.toString());
         try {
-            Process p = Runtime.getRuntime().exec("gnome-calculator");
-            Thread.sleep(5000);
-            p.destroy();
-        } catch (IOException ex) {
-            System.out.println("Error when opening 'gnome-calculator'");
+            Thread.sleep(10000);
         } catch (InterruptedException ex) {
-            System.out.println("Error when making thread sleep");
+            System.out.println("Thread interrupted: " + ex.toString());
         }
     }
-
 }
