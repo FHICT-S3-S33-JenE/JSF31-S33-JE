@@ -40,10 +40,13 @@ public class ProcessNew implements Runnable {
             InputStreamReader isr = new InputStreamReader(is);
             try (BufferedReader br = new BufferedReader(isr)) {
                 String line;
-                while ((line = br.readLine()) != null) {
-                    System.out.println(line);
+                if (br.ready()) {
+                    while ((line = br.readLine()) != null) {
+                        System.out.println(line);
+                    }
                 }
             }
+
             Thread.sleep(2000);
             p.destroy();
         } catch (IOException ex) {
