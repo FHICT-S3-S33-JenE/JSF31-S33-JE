@@ -18,93 +18,98 @@ public class RW {
     private int readersActive = 0;
     private int writersActive = 0;
     private int readersWaiting = 0;
+    private int writersWaiting = 0;
 
     Lock monLock = new ReentrantLock();
     Condition okToRead = monLock.newCondition();
     Condition okToWrite = monLock.newCondition();
 
-    public void enterReader() throws InterruptedException
-    {
+    public RW() {
+
+    }
+
+    public void enterReader() throws InterruptedException {
         monLock.lock();
-        try
-        {
-            while (writersActive != 0)
-            {
+        try {
+            while (writersActive != 0) {
                 readersWaiting++;
                 okToRead.await();
                 readersWaiting--;
-                
             }
             readersActive++;
-        }
-        catch (InterruptedException ex)
-        {
-            ex.getMessage();
-        } finally
-        {
+        } finally {
             monLock.unlock();
         }
     }
 
-    public void exitReader()
-    {
+    public void exitReader() {
         monLock.lock();
-        try{
+        try {
             readersActive--;
-            if(readersActive == 0)
-            {
+            if (readersActive == 0) {
                 okToWrite.signal();
             }
-        }
-        catch(Exception ex)
-        {
-            ex.getMessage();
-        }
-        finally
-        {
+        } finally {
             monLock.unlock();
         }
     }
 
-    public void enterWriter()
-    {
+    public void interruptedReader(Ball ball) {
         monLock.lock();
-        try
-        {
-            while(writersActive > 0 || readersActive > 0)
-            {
+        try {
+            if (ball.isEnteringCs()) {
+                readersWaiting--;
+            } else if (ball.isInCs()) {
+                readersActive--;
+            }
+        } finally {
+            monLock.unlock();
+        }
+    }
+
+    public void enterWriter() throws InterruptedException {
+        monLock.lock();
+        try {
+            while (writersActive > 0 || readersActive > 0) {
+                writersWaiting++;
                 okToWrite.await();
-                //writersActive++;
+                writersWaiting--;
             }
             writersActive++;
-        }
-        catch(Exception ex)
-        {
-            ex.getMessage();
-        }
-        finally
-        {
+        } finally {
             monLock.unlock();
         }
     }
 
-    public void exitWriter()
-    {
+    public void exitWriter() {
         monLock.lock();
-        try
-        {
+        try {
             writersActive--;
-            if(readersWaiting > 0)
-            {
-                okToRead.signal();
+            if (writersWaiting > 0 && writersActive == 0) {
+                okToWrite.signal();
+            } else {
+                okToRead.signalAll();
             }
-            else
-            {
+        } finally {
+            monLock.unlock();
+        }
+    }
+
+    public void interruptedWriter(Ball ball) {
+        monLock.lock();
+        try {
+            if (ball.isEnteringCs()) {
+                writersWaiting--;
+            } else if (ball.isInCs()) {
+                writersActive--;
+            }
+            if (writersWaiting == 0 && writersActive == 0){
+                okToRead.signalAll();
+            }
+            else if(writersWaiting > 0 ){
                 okToWrite.signal();
             }
-        }
-        finally
-        {
+        } finally {
             monLock.unlock();
         }
     }
